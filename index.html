@@ -3,16 +3,8 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>N-biz 求職者登録フォーム</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>N-biz フォームリダイレクト</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    label { display: block; margin-top: 10px; }
-    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; }
-    .hidden { display: none; }
-    button { margin-top: 20px; padding: 10px 15px; }
-  </style>
   <script>
     function initializeLiff() {
       liff.init({ liffId: '2007008877-X3B245Zd' })
@@ -21,8 +13,11 @@
             liff.login();
           } else {
             liff.getProfile().then(profile => {
-              document.getElementById("userId").value = profile.userId;
-              document.getElementById("displayName").value = profile.displayName;
+              const userId = encodeURIComponent(profile.userId);
+              const displayName = encodeURIComponent(profile.displayName);
+              const formBase = 'https://docs.google.com/forms/d/e/1FAIpQLSf8kk6gZiyXGovsdWnnmNKo2OYlksGAjjt0sGmKqDMiXe9_hw/viewform';
+              const fullUrl = `${formBase}?entry.1492143093=${userId}&entry.640964297=${displayName}`;
+              window.location.href = fullUrl;
             });
           }
         })
@@ -34,23 +29,6 @@
   </script>
 </head>
 <body>
-  <h2>N-biz 求職者登録フォーム</h2>
-  <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSf8kk6gZiyXGovsdWnnmNKo2OYlksGAjjt0sGmKqDMiXe9_hw/formResponse" method="POST">
-    <!-- hidden LINE info -->
-    <input type="hidden" name="entry.1492143093" id="userId">
-    <input type="hidden" name="entry.640964297" id="displayName">
-
-    <!-- visible fields for the user to input -->
-    <label for="name">お名前（任意）</label>
-    <input type="text" name="entry.9999999991" id="name">
-
-    <label for="age">年齢（任意）</label>
-    <input type="number" name="entry.9999999992" id="age">
-
-    <label for="job">希望職種（任意）</label>
-    <input type="text" name="entry.9999999993" id="job">
-
-    <button type="submit">送信する</button>
-  </form>
+  <p>フォームへ移動中です...</p>
 </body>
 </html>
