@@ -3,7 +3,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>N-biz求職者登録フォーム</title>
+  <title>N-bizフォームリダイレクト</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
     function initializeLiff() {
@@ -12,25 +12,24 @@
           if (!liff.isLoggedIn()) {
             liff.login();
           } else {
+            // ログイン済み → Googleフォームにリダイレクト
             liff.getProfile().then(profile => {
-              document.getElementById("userId").value = profile.userId;
-              document.getElementById("displayName").value = profile.displayName;
-              document.getElementById("form").submit();
+              const userId = profile.userId;
+              const displayName = profile.displayName;
+              // GoogleフォームのURLにパラメータ付きで遷移（カスタマイズ可能）
+              const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf8kk6gZiyXGovsdWnnmNKo2OYlksGAjjt0sGmKqDMiXe9_hw/viewform';
+              window.location.href = formUrl;
             });
           }
         })
         .catch(err => {
-          console.error('LIFF Initialization failed ', err);
+          console.error('LIFF Initialization failed', err);
         });
     }
     window.onload = initializeLiff;
   </script>
 </head>
 <body>
-  <form id="form" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSf8kk6gZiyXGovsdWnnmNKo2OYlksGAjjt0sGmKqDMiXe9_hw/formResponse" method="POST">
-    <input type="hidden" name="entry.1492143093" id="userId">
-    <input type="hidden" name="entry.640964297" id="displayName">
-    <noscript>JavaScriptが無効になっています。LINEアプリ内で開いてください。</noscript>
-  </form>
+  <p>フォームへ移動中です...</p>
 </body>
 </html>
