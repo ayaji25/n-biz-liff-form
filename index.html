@@ -1,31 +1,35 @@
-
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>N-biz フォームリダイレクト</title>
+  <title>Redirecting to Google Form</title>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    function initializeLiff() {
-      liff.init({ liffId: '2007008877-X3B245Zd' })
+    function runApp() {
+      liff.getProfile().then(profile => {
+        const userId = liff.getDecodedIDToken().sub;
+        const displayName = profile.displayName;
+        const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdhJQSyoQ1dokI0M4HMgePVnptkLPNfLCT6sFFUmTijtd9I0A/formResponse?entry.1491486634=" + encodeURIComponent(userId)
+                        + "&entry.750163769=" + encodeURIComponent(displayName);
+        window.location.href = formUrl;
+      }).catch(err => {
+        document.body.innerHTML = "<h3>エラーが発生しました：" + err + "</h3>";
+      });
+    }
+
+    window.onload = function () {
+      liff.init({ liffId: "2007008877-X3B245Zd" })
         .then(() => {
           if (!liff.isLoggedIn()) {
             liff.login();
           } else {
-            liff.getProfile().then(profile => {
-              const userId = encodeURIComponent(profile.userId);
-              const displayName = encodeURIComponent(profile.displayName);
-              const formBase = 'https://docs.google.com/forms/d/e/1FAIpQLSf8kk6gZiyXGovsdWnnmNKo2OYlksGAjjt0sGmKqDMiXe9_hw/viewform';
-              const fullUrl = `${formBase}?entry.1492143093=${userId}&entry.640964297=${displayName}`;
-              window.location.href = fullUrl;
-            });
+            runApp();
           }
         })
         .catch(err => {
-          console.error('LIFF Initialization failed', err);
+          document.body.innerHTML = "<h3>LIFF初期化エラー：" + err + "</h3>";
         });
-    }
-    window.onload = initializeLiff;
+    };
   </script>
 </head>
 <body>
